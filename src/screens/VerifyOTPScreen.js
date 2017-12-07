@@ -14,7 +14,7 @@ export class VerifyOTPScreen extends React.Component {
      
      componentDidMount = async () => {
          const savedtoken = await AsyncStorage.getItem('token');
-         this.setState({ token: savedtoken });
+         this.setState({ token: savedtoken, code: '' });
          this.setState({ phoneNumber: this.props.navigation.state.params.nomer });
      }
 
@@ -28,8 +28,11 @@ export class VerifyOTPScreen extends React.Component {
                     "code": this.state.code
                     }
                });
-            
+               console.log(this.state.phoneNumber)
+               console.log(this.state.code)
+               Alert.alert(String(response.data.message));
                 AsyncStorage.setItem('token', response.data.token);
+                AsyncStorage.setItem('phone', this.state.phoneNumber);
                 firebase.auth().signInWithCustomToken(response.data.token)
                 .then(() => {
                     console.log('ok');
@@ -45,17 +48,8 @@ export class VerifyOTPScreen extends React.Component {
            return Alert.alert('OTP tidak boleh kosong');
         }
 
-        // this.getToken();
-        console.log(this.state.token); 
-        if (this.state.token) {
-            firebase.auth().signInWithCustomToken(this.state.token)
-            .then(() => {
-                    console.log('ok');
-                });
-            this.props.navigation.navigate('TodoScrn', { nomer: this.state.phoneNumber });
-        } else {
-            this.loginfirebase();
-        }
+        // this.getToken();      
+            this.loginfirebase();     
     }
 
     render() {
